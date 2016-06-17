@@ -1,5 +1,6 @@
 #include <iostream>
 #include <arm_neon.h>
+#include <cmath>
 
 int main(int argc, char**argv)
 {
@@ -9,6 +10,7 @@ int main(int argc, char**argv)
     uint32x4_t ifour = vdupq_n_u32(4);
 
     float _data[256];
+    float _ref[256];
     for( int i = 0; i < 256; i += 4 )
     {
         float32x4_t x1 = vcvtq_f32_u32(idx);
@@ -19,9 +21,12 @@ int main(int argc, char**argv)
         vst1q_f32(_data + i, e);
         idx = vqaddq_u32(idx, ifour);
     }
+    for( int i = 0; i < 256; i++ )
+        _ref[i] = std::sqrt((float)i);
+
     for( int i = 0; i < 256; i ++ )
     {
-        std::cout << i << '\t' << _data[i] << std::endl;
+        std::cout << i << '\t' << _data[i] << '\t' << _ref[i] << '\t' << (_data[i] - _ref[i]) << std::endl;
     }
 
     return 0;
