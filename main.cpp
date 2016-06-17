@@ -21,12 +21,16 @@ int main(int argc, char**argv)
         vst1q_f32(_data + i, e);
         idx = vqaddq_u32(idx, ifour);
     }
+    _data[0] = 0.f;
     for( int i = 0; i < 256; i++ )
         _ref[i] = std::sqrt((float)i);
 
     for( int i = 0; i < 256; i ++ )
     {
-        std::cout << i << '\t' << _data[i] << '\t' << _ref[i] << '\t' << (_data[i] - _ref[i]) << std::endl;
+        if((((int*)_data)[i] - ((int*)_ref)[i]) != 0)
+        {
+            std::cout << i << '\t' << std::hex << ((unsigned int*)_data)[i] << '\t' << ((unsigned int*)_ref)[i] << '\t' << std::dec << (((int*)_data)[i] - ((int*)_ref)[i]) << std::endl;
+        }
     }
 
     return 0;
